@@ -12,6 +12,9 @@ permissions:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ReactNewApp
     steps:
       - name: Check out source code
         uses: actions/checkout@v7
@@ -21,18 +24,19 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: ReactNewApp/package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
+      - name: Run Vitest tests
         run: npm test
 
-      - name: Build
+      - name: Build React application
         run: npm run build
 
       - name: Upload production build
         uses: actions/upload-artifact@v6
         with:
           name: react-production-build
-          path: dist/
+          path: ReactNewApp/dist/
